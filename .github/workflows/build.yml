@@ -13,6 +13,17 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
+      - name: Free disk space
+        uses: jlumbroso/free-disk-space@main
+        with:
+          tool-cache: false
+          android: false
+          dotnet: true
+          haskell: true
+          large-packages: true
+          docker-images: true
+          swap-storage: true
+
       - name: Checkout
         uses: actions/checkout@v4
 
@@ -50,10 +61,8 @@ jobs:
             "build-tools;35.0.0" \
             "build-tools;36.0.0" 2>&1 | tail -5
 
-      - name: Install NDK
-        run: |
-          "${{ steps.sdk.outputs.path }}" --install "ndk;29.0.14033849" 2>&1 | tail -3
-          "${{ steps.sdk.outputs.path }}" --install "ndk;27.0.12077973" 2>&1 | tail -3
+      - name: Disk before build
+        run: df -h /home/runner
 
       - name: Build release APK
         run: |
