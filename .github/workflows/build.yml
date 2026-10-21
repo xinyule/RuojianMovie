@@ -5,12 +5,13 @@ on:
     branches: [main]
   workflow_dispatch:
 
+env:
+  ANDROID_HOME: /usr/local/lib/android/sdk
+  ANDROID_SDK_ROOT: /usr/local/lib/android/sdk
+
 jobs:
   build:
     runs-on: ubuntu-latest
-    env:
-      NDK_VERSION: '29.0.14033849'
-      NDK_VERSION_DEPS: '27.0.12077973'
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -28,13 +29,31 @@ jobs:
           distribution: zulu
           java-version: 21
 
-      - name: Setup Android SDK
-        uses: android-actions/setup-android@v3
+      - name: Locate sdkmanager
+        id: sdk
+        run: |
+          SM=$(ls -d "$ANDROID_HOME"/cmdline-tools/*/bin/sdkmanager 2>/dev/null | head -1)
+          if [ -z "$SM" ]; then SM=$(command -v sdkmanager || true); fi
+          echo "sdkmanager=$SM"
+          echo "path=$SM" >> "$GITHUB_OUTPUT"
+
+      - name: Accept SDK licenses
+        run: |
+          yes | "${{ steps.sdk.outputs.path }}" --licenses > /dev/null 2>&1 || true
+
+      - name: Install SDK packages
+        run: |
+          "${{ steps.sdk.outputs.path }}" --install \
+            "platform-tools" \
+            "platforms;android-35" \
+            "platforms;android-36" \
+            "build-tools;35.0.0" \
+            "build-tools;36.0.0" 2>&1 | tail -5
 
       - name: Install NDK
         run: |
-          echo "y" | sdkmanager --install "ndk;$NDK_VERSION"
-          echo "y" | sdkmanager --install "ndk;$NDK_VERSION_DEPS"
+          "${{ steps.sdk.outputs.path }}" --install "ndk;29.0.14033849" 2>&1 | tail -3
+          "${{ steps.sdk.outputs.path }}" --install "ndk;27.0.12077973" 2>&1 | tail -3
 
       - name: Build release APK
         run: |
