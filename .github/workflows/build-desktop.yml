@@ -96,6 +96,47 @@ jobs:
           file 若简影视-arm64.app/Contents/MacOS/* | head -3
           file 若简影视-x64.app/Contents/MacOS/* | head -3
 
+      - name: Fix zip filename encoding (UTF-8 flag)
+        shell: bash
+        run: |
+          set -e
+          python3 - <<'PY'
+          import zipfile, stat, sys
+          def fix(src):
+              tmp = src + '.fixed'
+              zin = zipfile.ZipFile(src)
+              zout = zipfile.ZipFile(tmp, 'w', zipfile.ZIP_DEFLATED)
+              for info in zin.infolist():
+                  name = info.filename
+                  # ditto 写的 zip 不带 UTF-8 标志，中文名被当成 cp437 读取
+                  if not (info.flag_bits & 0x800):
+                      raw = name.encode('cp437')
+                      try:
+                          name = raw.decode('utf-8')
+                      except UnicodeDecodeError:
+                          pass
+                  ni = zipfile.ZipInfo(name, info.date_time)
+                  ni.compress_type = info.compress_type
+                  ni.create_system = 3
+                  ni.external_attr = info.external_attr
+                  data = zin.read(info)
+                  if stat.S_ISLNK(info.external_attr >> 16):
+                      ni.external_attr = (0o120777 << 16)
+                  zout.writestr(ni, data)
+              zout.close(); zin.close()
+              import os, shutil
+              shutil.move(tmp, src)
+              print('fixed', src)
+          fix('若简影视-macOS-arm64.zip')
+          fix('若简影视-macOS-x64.zip')
+          PY
+          python3 -c "
+          import zipfile
+          for f in ['若简影视-macOS-arm64.zip','若简影视-macOS-x64.zip']:
+              z=zipfile.ZipFile(f)
+              print(f, '->', [n for n in z.namelist() if n.endswith('.app/Contents/Info.plist')])
+          "
+
       - name: Upload arm64
         uses: actions/upload-artifact@v4
         with:
