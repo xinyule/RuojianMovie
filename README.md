@@ -28,12 +28,14 @@
 
 | 文件 | 平台 | 适用 |
 | --- | --- | --- |
-| `若简影视-1.7.0.apk` | Android | arm64 + armeabi-v7a 通用包，一个包装所有手机 |
-| `若简影视-Windows-x64.zip` | Windows | 64 位，解压后运行 `tvp.exe` |
-| `若简影视-macOS-arm64.zip` | macOS | Apple 芯片（M1 / M2 / M3 / M4） |
-| `若简影视-macOS-x64.zip` | macOS | Intel 芯片 |
-| `若简影视-iOS-unsigned.ipa` | iOS | **未签名**，需自行签名后安装 |
+| `ruojian-1.7.0.apk` | Android | arm64 + armeabi-v7a 通用包，一个包装所有手机 |
+| `ruojian-Windows-x64.zip` | Windows | 64 位，解压后运行 `tvp.exe` |
+| `ruojian-macOS-arm64.zip` | macOS | Apple 芯片（M1 / M2 / M3 / M4） |
+| `ruojian-macOS-x64.zip` | macOS | Intel 芯片 |
+| `ruojian-iOS-unsigned.ipa` | iOS | **未签名**，需自行签名后安装 |
 
+> Release 资产名用 ASCII 命名（GitHub 上传接口不接受中文资产名），解压/安装后显示名均为「若简影视」。
+>
 > GitHub 访问不畅时，在下载链接前拼镜像前缀即可：
 > `https://gh-proxy.com/https://github.com/...` 或 `https://ghproxy.net/https://github.com/...`
 
