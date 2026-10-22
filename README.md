@@ -1,9 +1,9 @@
-# TvP
+# 若简影视
 
 > 服务器地址内置、开箱即用的私域影视客户端。基于 [MoonTechLab/Selene](https://github.com/MoonTechLab/Selene) 改造，全平台（Android / Windows / macOS / iOS）由 GitHub Actions 自动构建。
 
 ![Flutter](https://img.shields.io/badge/Flutter-3.44.0-02569B?logo=flutter)
-![Version](https://img.shields.io/badge/version-1.6.9-blue)
+![Version](https://img.shields.io/badge/version-1.7.0-blue)
 ![Platform](https://img.shields.io/badge/platform-Android%20%7C%20Windows%20%7C%20macOS%20%7C%20iOS-lightgrey)
 [![Download](https://img.shields.io/github/v/release/xinyule/selene-tvp?label=release&color=2ea44f)](https://github.com/xinyule/selene-tvp/releases/latest)
 
@@ -11,14 +11,14 @@
 
 ## 这是什么
 
-TvP 是 [Selene](https://github.com/MoonTechLab/Selene)（MoonTV 系影视客户端）的**私域定制版**，功能与原版完全一致，只改了分发相关的部分：
+若简影视是 [Selene](https://github.com/MoonTechLab/Selene)（MoonTV 系影视客户端）的**私域定制版**，播放功能与原版完全一致，只改分发相关的部分：
 
 | 改造项 | 说明 |
 | --- | --- |
 | **服务器地址内置** | 登录页不再有「服务器地址」输入框，地址写在代码常量里，打开只需填**用户名 + 密码** |
 | **可与原版共存** | 包名 / Bundle ID 全部改为 `com.tvp.app`（原版 `org.moontechlab.selene`），能和官方客户端同时安装 |
 | **更新指向本仓库** | 应用内「检查更新」调用 `xinyule/selene-tvp/releases/latest`，点击版本号跳转本仓库主页 |
-| **应用名与图标** | 显示名统一为 **TvP**，换成影院银幕风格图标 |
+| **应用名与图标** | 显示名统一为 **若简影视**，浅色清新风格的影院图标 |
 
 ---
 
@@ -28,11 +28,11 @@ TvP 是 [Selene](https://github.com/MoonTechLab/Selene)（MoonTV 系影视客户
 
 | 文件 | 平台 | 适用 |
 | --- | --- | --- |
-| `TvP-1.6.9.apk` | Android | arm64 + armeabi-v7a 通用包，一个包装所有手机 |
-| `TvP-Windows-x64.zip` | Windows | 64 位，解压后运行 `tvp.exe` |
-| `TvP-macOS-arm64.zip` | macOS | Apple 芯片（M1 / M2 / M3 / M4） |
-| `TvP-macOS-x64.zip` | macOS | Intel 芯片 |
-| `TvP-iOS-unsigned.ipa` | iOS | **未签名**，需自行签名后安装 |
+| `若简影视-1.7.0.apk` | Android | arm64 + armeabi-v7a 通用包，一个包装所有手机 |
+| `若简影视-Windows-x64.zip` | Windows | 64 位，解压后运行 `tvp.exe` |
+| `若简影视-macOS-arm64.zip` | macOS | Apple 芯片（M1 / M2 / M3 / M4） |
+| `若简影视-macOS-x64.zip` | macOS | Intel 芯片 |
+| `若简影视-iOS-unsigned.ipa` | iOS | **未签名**，需自行签名后安装 |
 
 > GitHub 访问不畅时，在下载链接前拼镜像前缀即可：
 > `https://gh-proxy.com/https://github.com/...` 或 `https://ghproxy.net/https://github.com/...`
@@ -41,7 +41,7 @@ TvP 是 [Selene](https://github.com/MoonTechLab/Selene)（MoonTV 系影视客户
 
 - **Android**：直接安装。若提示「未知来源」，允许一次即可。
 - **Windows**：解压**整个文件夹**后运行 `tvp.exe`（不要只拷 exe 出来）。首次打开被 SmartScreen 拦截时，点「更多信息 → 仍要运行」。
-- **macOS**：解压得到 `TvP.app`，拖入「应用程序」。应用未公证，首次启动需**右键 → 打开**。
+- **macOS**：解压得到「若简影视.app」，拖入「应用程序」。应用未公证，首次启动需**右键 → 打开**。
 - **iOS**：本 IPA 未签名，无法直接装到普通 iPhone。三种办法：
   1. 有 Apple 开发者账号：用 Xcode / Transporter 重签名后分发（TestFlight 或 Ad Hoc）；
   2. 无付费账号：用爱思助手、AltStore、Sideloadly 等工具配合个人 Apple ID 自签（免费账号有效期 7 天）；
@@ -99,6 +99,6 @@ flutter build ios --release --no-codesign
 
 ## 版权与声明
 
-- 本项目基于 [MoonTechLab/Selene](https://github.com/MoonTechLab/Selene) 源码改造，遵循上游项目的许可条款；本仓库仅用于私域分发与自动构建，不对上游功能做二次分发声明上的变更。
+- 本项目基于 [MoonTechLab/Selene](https://github.com/MoonTechLab/Selene) 源码改造，遵循上游项目的许可条款；本仓库仅用于私域分发与自动构建。
 - 本项目仅为客户端壳，不提供、不存储任何影视资源；播放内容由你自建的服务端决定，请遵守所在地法律法规。
 - 使用本项目造成的任何问题由使用者自行承担。

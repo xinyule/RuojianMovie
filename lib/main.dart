@@ -48,7 +48,7 @@ void main() async {
       win.minSize = minSize;
       win.size = initialSize;
       win.alignment = Alignment.center;
-      win.title = "TvP";
+      win.title = "若简影视";
       win.show();
     });
   }
@@ -64,7 +64,7 @@ class SeleneApp extends StatelessWidget {
       child: Consumer<ThemeService>(
         builder: (context, themeService, child) {
           return MaterialApp(
-            title: 'TvP',
+            title: '若简影视',
             debugShowCheckedModeBanner: false,
             theme: themeService.lightTheme,
             darkTheme: themeService.darkTheme,

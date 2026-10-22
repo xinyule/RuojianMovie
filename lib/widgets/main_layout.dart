@@ -465,7 +465,7 @@ class _MainLayoutState extends State<MainLayout> {
               onTap: widget.onHomeTap,
               behavior: HitTestBehavior.opaque,
               child: Text(
-                'TvP',
+                '若简影视',
                 style: FontUtils.sourceCodePro(
                   fontSize: 24,
                   fontWeight: FontWeight.w400,

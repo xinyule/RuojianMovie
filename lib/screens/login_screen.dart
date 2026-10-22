@@ -570,7 +570,7 @@ class _LoginScreenState extends State<LoginScreen> {
         GestureDetector(
           onTap: _handleLogoTap,
           child: Text(
-            'TvP',
+            '若简影视',
             style: FontUtils.sourceCodePro(
               fontSize: 42,
               fontWeight: FontWeight.w400,
@@ -780,7 +780,7 @@ class _LoginScreenState extends State<LoginScreen> {
           GestureDetector(
             onTap: _handleLogoTap,
             child: Text(
-              'TvP',
+              '若简影视',
               style: FontUtils.sourceCodePro(
                 fontSize: 42,
                 fontWeight: FontWeight.w400,

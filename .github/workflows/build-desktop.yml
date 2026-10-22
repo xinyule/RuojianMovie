@@ -29,15 +29,15 @@ jobs:
         shell: bash
         run: |
           cd build/windows/x64/runner/Release
-          7z a -y -r ../../../../../TvP-Windows-x64.zip ./* > /dev/null
+          7z a -y -r ../../../../../若简影视-Windows-x64.zip ./* > /dev/null
           cd ../../../../..
-          ls -la TvP-Windows-x64.zip
+          ls -la 若简影视-Windows-x64.zip
 
       - name: Upload
         uses: actions/upload-artifact@v4
         with:
-          name: tvp-windows-x64
-          path: TvP-Windows-x64.zip
+          name: ruojian-windows-x64
+          path: 若简影视-Windows-x64.zip
 
   macos:
     runs-on: macos-14
@@ -59,7 +59,10 @@ jobs:
         run: flutter build macos --release
 
       - name: Ad-hoc sign
-        run: codesign --force --deep --sign - build/macos/Build/Products/Release/TvP.app || codesign --force --deep --sign - build/macos/Build/Products/Release/Runner.app
+        run: |
+          APP=$(ls -d build/macos/Build/Products/Release/*.app | head -1)
+          echo "signing: $APP"
+          codesign --force --deep --sign - "$APP"
 
       - name: Split architectures
         shell: bash
@@ -84,26 +87,26 @@ jobs:
             chmod +x "$out/Contents/MacOS/"* 2>/dev/null || true
             codesign --force --deep --sign - "$out" || true
           }
-          thin arm64  TvP-arm64.app
-          thin x86_64 TvP-x64.app
-          ditto -c -k --keepParent TvP-arm64.app TvP-macOS-arm64.zip
-          ditto -c -k --keepParent TvP-x64.app   TvP-macOS-x64.zip
-          ls -la TvP-macOS-*.zip
+          thin arm64  若简影视-arm64.app
+          thin x86_64 若简影视-x64.app
+          ditto -c -k --keepParent 若简影视-arm64.app 若简影视-macOS-arm64.zip
+          ditto -c -k --keepParent 若简影视-x64.app   若简影视-macOS-x64.zip
+          ls -la 若简影视-macOS-*.zip
           echo "--- verify ---"
-          file TvP-arm64.app/Contents/MacOS/* | head -3
-          file TvP-x64.app/Contents/MacOS/* | head -3
+          file 若简影视-arm64.app/Contents/MacOS/* | head -3
+          file 若简影视-x64.app/Contents/MacOS/* | head -3
 
       - name: Upload arm64
         uses: actions/upload-artifact@v4
         with:
-          name: tvp-macos-arm64
-          path: TvP-macOS-arm64.zip
+          name: ruojian-macos-arm64
+          path: 若简影视-macOS-arm64.zip
 
       - name: Upload x64
         uses: actions/upload-artifact@v4
         with:
-          name: tvp-macos-x64
-          path: TvP-macOS-x64.zip
+          name: ruojian-macos-x64
+          path: 若简影视-macOS-x64.zip
 
   ios:
     runs-on: macos-14
@@ -140,13 +143,13 @@ jobs:
           rm -rf Payload
           mkdir Payload
           cp -R Runner.app Payload/
-          zip -qry TvP-iOS-unsigned.ipa Payload
-          mv TvP-iOS-unsigned.ipa ../../../TvP-iOS-unsigned.ipa
+          zip -qry 若简影视-iOS-unsigned.ipa Payload
+          mv 若简影视-iOS-unsigned.ipa ../../../若简影视-iOS-unsigned.ipa
           cd ../../..
-          ls -la TvP-iOS-unsigned.ipa
+          ls -la 若简影视-iOS-unsigned.ipa
 
       - name: Upload
         uses: actions/upload-artifact@v4
         with:
-          name: tvp-ios-unsigned
-          path: TvP-iOS-unsigned.ipa
+          name: ruojian-ios-unsigned
+          path: 若简影视-iOS-unsigned.ipa
