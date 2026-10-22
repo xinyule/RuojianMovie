@@ -39,48 +39,6 @@ jobs:
           name: tvp-windows-x64
           path: TvP-Windows-x64.zip
 
-  windows-arm64:
-    runs-on: windows-latest
-    continue-on-error: true
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Setup Flutter
-        uses: subosito/flutter-action@v2
-        with:
-          flutter-version: '3.44.0'
-          channel: stable
-          cache: false
-
-      - name: Enable Windows desktop
-        run: flutter config --enable-windows-desktop
-
-      - name: Generate flutter assets
-        run: flutter build bundle --release --target-platform windows-x64
-
-      - name: Try ARM64 CMake build
-        shell: cmd
-        run: |
-          cmake -S windows -B build/win_arm64 -A ARM64 -DCMAKE_BUILD_TYPE=Release
-          cmake --build build/win_arm64 --config Release
-
-      - name: Package zip
-        if: success()
-        shell: bash
-        run: |
-          cd build/win_arm64/runner/Release
-          7z a -y -r ../../../../../TvP-Windows-arm64.zip ./* > /dev/null
-          cd ../../../../..
-          ls -la TvP-Windows-arm64.zip
-
-      - name: Upload
-        if: success()
-        uses: actions/upload-artifact@v4
-        with:
-          name: tvp-windows-arm64
-          path: TvP-Windows-arm64.zip
-
   macos:
     runs-on: macos-14
     steps:
@@ -159,6 +117,16 @@ jobs:
           flutter-version: '3.44.0'
           channel: stable
           cache: false
+
+      - name: Pub get
+        run: flutter pub get
+
+      - name: Patch app_settings Swift source for Xcode 16
+        run: |
+          F=$(find "$HOME/.pub-cache" -path "*app_settings-7.0.0*/ios/app_settings/Sources/app_settings/AppSettingsPlugin.swift" | head -1)
+          echo "file: $F"
+          sed -i '' 's/@preconcurrency //g' "$F"
+          sed -n '1,6p' "$F"
 
       - name: Build iOS (no codesign)
         run: flutter build ios --release --no-codesign
