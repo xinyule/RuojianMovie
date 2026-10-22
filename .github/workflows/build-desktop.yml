@@ -1,0 +1,184 @@
+name: build-desktop
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  windows-x64:
+    runs-on: windows-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.44.0'
+          channel: stable
+          cache: false
+
+      - name: Enable Windows desktop
+        run: flutter config --enable-windows-desktop
+
+      - name: Build Windows x64
+        run: flutter build windows --release
+
+      - name: Package zip
+        shell: bash
+        run: |
+          cd build/windows/x64/runner/Release
+          7z a -y -r ../../../../../TvP-Windows-x64.zip ./* > /dev/null
+          cd ../../../../..
+          ls -la TvP-Windows-x64.zip
+
+      - name: Upload
+        uses: actions/upload-artifact@v4
+        with:
+          name: tvp-windows-x64
+          path: TvP-Windows-x64.zip
+
+  windows-arm64:
+    runs-on: windows-latest
+    continue-on-error: true
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.44.0'
+          channel: stable
+          cache: false
+
+      - name: Enable Windows desktop
+        run: flutter config --enable-windows-desktop
+
+      - name: Generate flutter assets
+        run: flutter build bundle --release --target-platform windows-x64
+
+      - name: Try ARM64 CMake build
+        shell: cmd
+        run: |
+          cmake -S windows -B build/win_arm64 -A ARM64 -DCMAKE_BUILD_TYPE=Release
+          cmake --build build/win_arm64 --config Release
+
+      - name: Package zip
+        if: success()
+        shell: bash
+        run: |
+          cd build/win_arm64/runner/Release
+          7z a -y -r ../../../../../TvP-Windows-arm64.zip ./* > /dev/null
+          cd ../../../../..
+          ls -la TvP-Windows-arm64.zip
+
+      - name: Upload
+        if: success()
+        uses: actions/upload-artifact@v4
+        with:
+          name: tvp-windows-arm64
+          path: TvP-Windows-arm64.zip
+
+  macos:
+    runs-on: macos-14
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.44.0'
+          channel: stable
+          cache: false
+
+      - name: Enable macOS desktop
+        run: flutter config --enable-macos-desktop
+
+      - name: Build macOS (universal)
+        run: flutter build macos --release
+
+      - name: Ad-hoc sign
+        run: codesign --force --deep --sign - build/macos/Build/Products/Release/TvP.app || codesign --force --deep --sign - build/macos/Build/Products/Release/Runner.app
+
+      - name: Split architectures
+        shell: bash
+        run: |
+          set -e
+          SRC=$(ls -d build/macos/Build/Products/Release/*.app | head -1)
+          echo "source app: $SRC"
+          lipo -info "$SRC/Contents/MacOS/$(defaults read "$(pwd)/$SRC/Contents/Info.plist" CFBundleExecutable 2>/dev/null || echo Runner)" 2>/dev/null || true
+          thin() {
+            local arch="$1" out="$2"
+            rm -rf "$out"
+            cp -R "$SRC" "$out"
+            find "$out" -type f -print0 | while IFS= read -r -d '' f; do
+              if file "$f" | grep -q "Mach-O"; then
+                if lipo -thin "$arch" "$f" -o "$f.thin" 2>/dev/null; then
+                  mv "$f.thin" "$f"
+                else
+                  rm -f "$f.thin"
+                fi
+              fi
+            done
+            chmod +x "$out/Contents/MacOS/"* 2>/dev/null || true
+            codesign --force --deep --sign - "$out" || true
+          }
+          thin arm64  TvP-arm64.app
+          thin x86_64 TvP-x64.app
+          ditto -c -k --keepParent TvP-arm64.app TvP-macOS-arm64.zip
+          ditto -c -k --keepParent TvP-x64.app   TvP-macOS-x64.zip
+          ls -la TvP-macOS-*.zip
+          echo "--- verify ---"
+          file TvP-arm64.app/Contents/MacOS/* | head -3
+          file TvP-x64.app/Contents/MacOS/* | head -3
+
+      - name: Upload arm64
+        uses: actions/upload-artifact@v4
+        with:
+          name: tvp-macos-arm64
+          path: TvP-macOS-arm64.zip
+
+      - name: Upload x64
+        uses: actions/upload-artifact@v4
+        with:
+          name: tvp-macos-x64
+          path: TvP-macOS-x64.zip
+
+  ios:
+    runs-on: macos-14
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.44.0'
+          channel: stable
+          cache: false
+
+      - name: Build iOS (no codesign)
+        run: flutter build ios --release --no-codesign
+
+      - name: Package unsigned IPA
+        shell: bash
+        run: |
+          set -e
+          cd build/ios/iphoneos
+          ls -la
+          rm -rf Payload
+          mkdir Payload
+          cp -R Runner.app Payload/
+          zip -qry TvP-iOS-unsigned.ipa Payload
+          mv TvP-iOS-unsigned.ipa ../../../TvP-iOS-unsigned.ipa
+          cd ../../..
+          ls -la TvP-iOS-unsigned.ipa
+
+      - name: Upload
+        uses: actions/upload-artifact@v4
+        with:
+          name: tvp-ios-unsigned
+          path: TvP-iOS-unsigned.ipa
