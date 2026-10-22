@@ -970,7 +970,7 @@ class _UserMenuState extends State<UserMenu> {
                       child: GestureDetector(
                         onTap: () async {
                           final url = Uri.parse(
-                              'https://github.com/xinyule/selene-tvp');
+                              'https://github.com/xinyule/RuojianMovie');
                           if (await canLaunchUrl(url)) {
                             await launchUrl(url,
                                 mode: LaunchMode.externalApplication);
@@ -983,7 +983,9 @@ class _UserMenuState extends State<UserMenu> {
                           ),
                           child: Center(
                             child: Text(
-                              _version.isEmpty ? 'v1.4.3' : 'v$_version',
+                              _version.isEmpty
+                                  ? '若简影视 v1.7.1'
+                                  : '若简影视 v$_version',
                               style: FontUtils.poppins(
                                 fontSize: 14,
                                 color: widget.isDarkMode

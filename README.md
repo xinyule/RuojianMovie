@@ -3,9 +3,9 @@
 > 服务器地址内置、开箱即用的私域影视客户端。基于 [MoonTechLab/Selene](https://github.com/MoonTechLab/Selene) 改造，全平台（Android / Windows / macOS / iOS）由 GitHub Actions 自动构建。
 
 ![Flutter](https://img.shields.io/badge/Flutter-3.44.0-02569B?logo=flutter)
-![Version](https://img.shields.io/badge/version-1.7.0-blue)
+![Version](https://img.shields.io/badge/version-1.7.1-blue)
 ![Platform](https://img.shields.io/badge/platform-Android%20%7C%20Windows%20%7C%20macOS%20%7C%20iOS-lightgrey)
-[![Download](https://img.shields.io/github/v/release/xinyule/selene-tvp?label=release&color=2ea44f)](https://github.com/xinyule/selene-tvp/releases/latest)
+[![Download](https://img.shields.io/github/v/release/xinyule/RuojianMovie?label=release&color=2ea44f)](https://github.com/xinyule/RuojianMovie/releases/latest)
 
 ---
 
@@ -16,20 +16,20 @@
 | 改造项 | 说明 |
 | --- | --- |
 | **服务器地址内置** | 登录页不再有「服务器地址」输入框，地址写在代码常量里，打开只需填**用户名 + 密码** |
-| **可与原版共存** | 包名 / Bundle ID 全部改为 `com.tvp.app`（原版 `org.moontechlab.selene`），能和官方客户端同时安装 |
-| **更新指向本仓库** | 应用内「检查更新」调用 `xinyule/selene-tvp/releases/latest`，点击版本号跳转本仓库主页 |
+| **可与原版共存** | 包名 / Bundle ID 全部改为 `com.ruojian.app`（原版 `org.moontechlab.selene`），能和官方客户端同时安装 |
+| **更新指向本仓库** | 应用内「检查更新」调用 `xinyule/RuojianMovie/releases/latest`，点击「若简影视 + 版本号」跳转本仓库主页 |
 | **应用名与图标** | 显示名统一为 **若简影视**，浅色清新风格的影院图标 |
 
 ---
 
 ## 下载
 
-👉 **<https://github.com/xinyule/selene-tvp/releases/latest>**
+👉 **<https://github.com/xinyule/RuojianMovie/releases/latest>**
 
 | 文件 | 平台 | 适用 |
 | --- | --- | --- |
-| `ruojian-1.7.0.apk` | Android | arm64 + armeabi-v7a 通用包，一个包装所有手机 |
-| `ruojian-Windows-x64.zip` | Windows | 64 位，解压后运行 `tvp.exe` |
+| `ruojian-1.7.1.apk` | Android | arm64 + armeabi-v7a 通用包，一个包装所有手机 |
+| `ruojian-Windows-x64.zip` | Windows | 64 位，解压后运行 `ruojian.exe` |
 | `ruojian-macOS-arm64.zip` | macOS | Apple 芯片（M1 / M2 / M3 / M4） |
 | `ruojian-macOS-x64.zip` | macOS | Intel 芯片 |
 | `ruojian-iOS-unsigned.ipa` | iOS | **未签名**，需自行签名后安装 |
@@ -42,7 +42,7 @@
 ### 安装提示
 
 - **Android**：直接安装。若提示「未知来源」，允许一次即可。
-- **Windows**：解压**整个文件夹**后运行 `tvp.exe`（不要只拷 exe 出来）。首次打开被 SmartScreen 拦截时，点「更多信息 → 仍要运行」。
+- **Windows**：解压**整个文件夹**后运行 `ruojian.exe`（不要只拷 exe 出来）。首次打开被 SmartScreen 拦截时，点「更多信息 → 仍要运行」。
 - **macOS**：解压得到「若简影视.app」，拖入「应用程序」。应用未公证，首次启动需**右键 → 打开**。
 - **iOS**：本 IPA 未签名，无法直接装到普通 iPhone。三种办法：
   1. 有 Apple 开发者账号：用 Xcode / Transporter 重签名后分发（TestFlight 或 Ad Hoc）；
